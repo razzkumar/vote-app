@@ -17,8 +17,12 @@ app.logger.handlers.extend(gunicorn_error_logger.handlers)
 app.logger.setLevel(logging.INFO)
 
 def get_redis():
+    redisHost=os.getenv("REDIS_HOST",'redis')
+    redisPort=int(os.getenv("REDIS_PORT",'6379'))
+    redisPassword=os.getenv("REDIS_PASSWORD",'redis')
+    redisUser=os.getenv("REDIS_USER")
     if not hasattr(g, 'redis'):
-        g.redis = Redis(host="redis", db=0, socket_timeout=5)
+        g.redis = Redis(host=redisHost, db=0, socket_timeout=5,username=redisUser,port=redisPort,password=redisPassword)
     return g.redis
 
 @app.route("/", methods=['POST','GET'])
@@ -45,7 +49,6 @@ def hello():
     ))
     resp.set_cookie('voter_id', voter_id)
     return resp
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80, debug=True, threaded=True)

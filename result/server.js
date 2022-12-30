@@ -22,8 +22,10 @@ io.sockets.on('connection', function(socket) {
   });
 });
 
+const connectionString = process.env.DATABASE_URL || 'postgres://postgres:postgres@db/postgres';
+
 var pool = new pg.Pool({
-  connectionString: 'postgres://postgres:postgres@db/postgres'
+  connectionString
 });
 
 async.retry(
