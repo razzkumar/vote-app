@@ -1,15 +1,15 @@
-const express = require('express');
-const async = require('async');
-const pg = require('pg');
-const { Pool } = require('pg');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const methodOverride = require('method-override');
-const app = express();
-const server = require('http').Server(app);
-const { Server } = require("socket.io")
-const io = new Server(server)
+var express = require('express'),
+  async = require('async'),
+  pg = require('pg'),
+  { Pool } = require('pg'),
+  path = require('path'),
+  cookieParser = require('cookie-parser'),
+  methodOverride = require('method-override'),
+  app = express(),
+  server = require('http').Server(app),
+  io = require('socket.io')(server);
+
+io.set('transports', ['polling']);
 
 var port = process.env.PORT || 4000;
 
@@ -69,9 +69,9 @@ function collectVotesFromResult(result) {
 }
 
 app.use(cookieParser());
-app.use(bodyParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride('X-HTTP-Method-Override'));
-
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
