@@ -16,8 +16,6 @@ namespace Worker
         {
             try
             {
-                var pgServer = Environment.GetEnvironmentVariable()
-
                 var pgsql = OpenDbConnection("Server=db;Username=postgres;Password=postgres;");
                 var redisConn = OpenRedisConnection("redis");
                 var redis = redisConn.GetDatabase();
@@ -115,7 +113,7 @@ namespace Worker
                 try
                 {
                     Console.Error.WriteLine("Connecting to redis");
-                    return ConnectionMultiplexer.Connect(ipAddress);
+                    return ConnectionMultiplexer.Connect($"{ipAddress},Password=redis");
                 }
                 catch (RedisConnectionException)
                 {
